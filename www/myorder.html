@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
+        <title>客运APP</title>
+        <!-- <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" /> -->
+        <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <!-- 生产环境版本，优化了尺寸和速度 -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <!--订单详细信息-->
+        <div class="modal fade" id="showOrder" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" >
+                            <div class="form-group">
+                                <label>目的地：</label>
+                                <input id="endplace" type="text" class="form-control"  placeholder="不能为空" />
+                            </div>
+                            <div class="form-group">
+                                <label>出发时间：</label>
+                                <input id="starttime" type="datetime-local" class="form-control"  placeholder="不能为空" />
+                            </div>
+                            <div class="form-group" id="eIsd">
+                                <label>车牌号：</label>
+                                <input id="carnum" type="text" class="form-control" readOnly="true" placeholder="Aaeds5454" />
+                            </div>
+                            <div class="form-group">
+                                <label>手机号：</label>
+                                <input id="phonenum" type="text" class="form-control"  readOnly="true" placeholder="12222222222" />
+                            </div>
+                            <div class="form-group">
+                                <label>拼车人数：</label>
+                                <input id="poolcost" type="text" class="form-control"  readOnly="true" placeholder="12222222222" />
+                            </div>
+                            <div class="form-group">
+                                <label>费用：</label>
+                                <input id="poolcost" type="text" class="form-control"  readOnly="true" placeholder="12222222222" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--搜索框-->
+        <div class="container fixed-top" style="padding-top: 15px;background-color: white;">
+            <div class="row">
+                <div class=" col-12">
+                    <input type="text" id="searchendplace" class="form-control" placeholder="输入目的地">
+                </div>
+            </div>
+            <div class="row">
+                <div class=" col-5">
+                    <input type="datetime-local" id="searchstarttime" class="form-control">
+                </div>
+                <div class=" col-2" style="text-align: center">
+                    至
+                </div>
+                <div class=" col-5">
+                    <input type="datetime-local" id="searchendtime" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class=" col-12">
+                    <button class="btn btn-light btn-block" type="button" onclick="queryOrder()">查询</button>
+                </div>
+            </div>
+        </div>
+        <!--搜索结果-->
+        <div id="orderList" class="container " style="margin-top: 135px;overflow: scroll;">
+            <ul class="list-group">
+                <div onclick="alert('openAddOrder')">
+                    <li class="list-group-item">
+                        2020-01-02 08:00 北京 100元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+                <div onclick="openAddOrder(index)">
+                    <li class="list-group-item">
+                        2020-02-01 10:00 长春 200元
+                    </li>
+                </div>
+            </ul>
+        </div>
+        <!--底部导航栏-->
+        <nav class="navbar bg-light fixed-bottom " style="margin:0;">
+            <div class="container">
+                <div class="col-4 text-center">
+                    <a href="index.html" style="color: black">定制</br>
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <a href="#" style="color: black">订单</br>
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list-ul" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <a href="#" style="color: black">我的</br>
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+                            <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </body>
+</html>
