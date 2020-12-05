@@ -1,0 +1,58 @@
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" href="css.css">
+</head>
+<body>
+<div class="main">
+    <div class="title">
+        <span>密码登录</span>
+    </div>
+ 
+    <div class="title-msg">
+        <span>请输入登录账户和密码</span>
+    </div>
+ 
+    <form class="login-form" action="/authentication/form" method="post" novalidate >
+        <!--输入框-->
+        <div class="input-content">
+            <!--autoFocus-->
+            <div>
+                <input type="text" autocomplete="off"
+                       placeholder="用户名" name="username" id="userid"required/>
+            </div>
+            <div style="margin-top: 16px">
+                <input type="password"id="userpwd"
+                       autocomplete="off" placeholder="登录密码" name="password" required maxlength="32"/>
+            </div>
+        </div>
+ 
+        <!--登入按钮-->
+        <div style="text-align: center">
+            <button type="submit" class="enter-btn"onclick="return eg.regCheck();" >登录</button>
+        </div>
+ 
+        <div class="foor">
+            <div class="right"><a href="re.html"><span>注册账户</span></a></div>
+        </div>
+    </form>
+ 
+</div>
+<script>
+    var eg = {};
+    eg.$ =function(id){
+        return document.getElementById(id);
+    }
+    eg.regCheck = function(){
+        var uid = eg.$("userid");
+        var upwd = eg.$("userpwd");
+        if(uid.value == ''){
+            alert('账户不能为空')
+            return false;
+        }
+        if(upwd.value == ''){
+            alert('密码不能为空')
+            return false;
+        }
+      }
+</script>

@@ -1,0 +1,116 @@
+body{
+    background: #353f42;
+}
+ 
+*{
+    padding: 0;
+    margin: 0;
+}
+ 
+.main {
+    margin: 0 auto;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 15px;
+    width: 600px;
+    height: 900px;
+    background: #FFFFFF;
+    /*以下css用于让登录表单垂直居中在界面,可删除*/
+    position: absolute;
+    top: 35%;
+    left: 35%;
+    margin-top: -175px;
+    margin-left: -175px;
+}
+ 
+.title {
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin-top: 100px;
+}
+ 
+.title span {
+    font-size: 60px;
+    color: #353f42;
+   
+}
+ 
+.title-msg {
+    width: 100%;
+    height: 64px;
+    line-height: 64px;
+    text-align: center;
+    margin-top: 20px;
+}
+ 
+.title:hover{
+    cursor: default	;
+}
+ 
+.title-msg:hover{
+    cursor: default	;
+}
+ 
+.title-msg span {
+    font-size: 20px;
+    color: #707472;
+}
+ 
+.input-content {
+    width: 100%;
+    height: 400px;
+    text-align: center;
+}
+ 
+.input-content input {
+    width: 600px;
+    height: 80px;
+    border: 1px solid #dad9d6;
+    background: #ffffff;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 70px;
+    font-size: 20px;
+
+}
+ 
+.enter-btn {
+    width:600px;
+    height: 60px;
+    color: #fff;
+    background: #0bc5de;
+    line-height: 40px;
+    text-align: center;
+    border: 0px;
+    font-size: 30px;
+}
+ 
+.foor{
+    width: 100%;
+    height: auto;
+    color: #9b9c98;
+    font-size: 20px;
+    margin-top: 60px;
+}
+
+a:link{text-decoration: none;}
+ 
+.enter-btn:hover {
+    cursor:pointer;
+    background: #1db5c9;
+}
+ 
+.foor div:hover {
+    cursor:pointer;
+    color: #484847;
+    font-weight: 600;
+}
+ 
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
