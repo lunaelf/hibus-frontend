@@ -42,16 +42,19 @@
         <!-- <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" /> -->
         <!-- 开发环境版本，包含了有帮助的命令行警告 -->
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!-- Vue.js 2.0 版本推荐使用 axios 来完成 ajax 请求。 -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <!-- 生产环境版本，优化了尺寸和速度 -->
         <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
         <!-- <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script> -->
         <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
     </head>
     <body>
         <!--定制按钮-->
-        <button class="btn btn-xs btn-primary fixed-top" style="margin-top: 90px;margin-left: 10px"  data-toggle="modal"  data-target="#addOrder">
+        <button id='newBtn' class="btn btn-xs btn-primary fixed-top" style="margin-top: 90px;margin-left: 10px"  data-toggle="modal"  data-target="#addOrder" v-on:click="newAddOrder()">
             定制客车
         </button>
         <!--编辑订单弹窗#dee4e4-->
@@ -65,7 +68,7 @@
                         <form role="form" >
                             <div class="form-group">
                                 <label>目的地：</label>
-                                <input id="endplace" type="text" class="form-control"  placeholder="不能为空" />
+                                <input id="endplace" type="text" class="form-control"  placeholder="不能为空" >
                             </div>
                             <div class="form-group">
                                 <label>出发时间：</label>
@@ -73,15 +76,17 @@
                             </div>
                             <div class="form-group" id="eIsd">
                                 <label>车牌号：</label>
-                                <input id="carnum" type="text" class="form-control" readOnly="true" placeholder="Aaeds5454" />
+                                <input id="carnum" type="text" class="form-control" readOnly="true"  />
                             </div>
                             <div class="form-group">
-                                <label>手机号：</label>
-                                <input id="phonenum" type="text" class="form-control"  readOnly="true" placeholder="12222222222" />
+                                <label>司机手机号：</label>
+                                <input id="phonenum" type="text" class="form-control"  readOnly="true"  />
                             </div>
                             <div class="form-group">
                                 <label>费用：</label>
-                                <input id="poolcost" type="text" class="form-control"  readOnly="true" placeholder="12222222222" />
+                                <input id="poolcost" type="text" class="form-control"  readOnly="true"  />
+                                <!--主键-->
+                                <input id="id" type="hidden" readOnly="true"/>
                             </div>
                         </form>
                     </div>
@@ -123,86 +128,14 @@
         <div class="main" id="gdmap"></div>
         <!--订单列表-->
         <div id="orderList" class="container fixed-bottom " style="z-index: 9;bottom:63px;max-height:40%;overflow: scroll;">
-                <ul class="list-group">
-                    <div onclick="alert('openAddOrder')">
-                        <li class="list-group-item">
-                            2020-01-02 08:00 北京 100元
+                <ol class="list-group">
+                    <li class="list-group-item" v-for="order in orderList">
+                        <div v-on:click="openAddOrder(order)">
+                            {{ order.starttime }} &nbsp {{ order.endplace }} &nbsp {{ order.poolcost }}
                             <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-02-01 10:00 长春 200元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-11-01 08:30 长春 200元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-01-11 18:30 葫芦岛 500元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-11-11 09:15 鞍山 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-11-21 11:00 葫芦岛 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-02-11 13:00 葫芦岛 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-04-01 15:00 北京 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-11-21 22:00 北京 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-05-01 11:00 北京 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div onclick="openAddOrder(index)">
-                        <li class="list-group-item">
-                            2020-06-01 12:00 北京 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div>
-                        <li class="list-group-item">
-                            2020-03-23 06:00 北京 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                    <div>
-                        <li class="list-group-item">
-                            2020-04-24 04:00 大连 100元
-                            <span class="badge text-danger">拼</span>
-                        </li>
-                    </div>
-                </ul>
+                        </div>
+                    </li>
+                </ol>
         </div>
         <!--底部导航栏-->
         <nav class="navbar bg-light fixed-bottom " style="margin:0;">
@@ -268,6 +201,77 @@
             //     alert(obj.info + '--' + obj.message);
             //     console.log(obj);
             // }
+        </script>
+        <!--订单列表js-->
+        <script>
+            //渲染订单列表数据
+            new Vue({
+                el: '#orderList',
+                data: {
+                    orderList: [
+                    { id: 0,starttime: '2020-12-02T21:02',endplace:'北京',poolcost:'100元', phonenum :'13333333333',carnum:'黑A1234' },
+                    { id: 1,starttime: '2021-01-02T08:00',endplace:'北京',poolcost:'200元', phonenum :'14444443333',carnum:'黑B1234'},
+                    { id: 2,starttime: '2022-01-02T08:00',endplace:'北京',poolcost:'300元', phonenum :'15455463333333',carnum:'黑C1234'}
+                    ]
+                },
+                methods: {
+                    openAddOrder: function (event) {//点击每条数据打开模态框
+                        $('#id').val(event.id);
+                        $('#endplace').val(event.endplace);
+                        $('#endplace').attr('readOnly',true);
+                        $('#starttime').val(event.starttime);
+                        $('#starttime').attr('readOnly',true);
+                        $('#carnum').val(event.carnum);
+                        $('#phonenum').val(event.phonenum);
+                        $('#poolcost').val(event.poolcost);
+                        $('#addOrder').modal();//打开模态框
+                    }
+                }
+            })
+        </script>
+        <!--定制客车按钮js-->
+        <script>
+            new Vue({
+                el: '#newBtn',
+                methods: {
+                    newAddOrder: function () {//清除模态框数据
+                        //缺少向后台查询可用的车牌+手机号
+                        $('#id').val('-999');
+                        $('#endplace').val('');
+                        $('#endplace').attr('readOnly',false);
+                        $('#starttime').val('');
+                        $('#starttime').attr('readOnly',false);
+                        $('#carnum').val('');
+                        $('#phonenum').val('');
+                        $('#poolcost').val('');
+                    }
+                }
+            })
+        </script>
+        <!--提交订单-->
+        <script type="text/javascript">
+            function saveOrder(){
+            $('#addOrder').modal('hide');
+            }
+            //new Vue({
+                //el: '#addOrder'
+                // mounted () {
+                //     axios
+                //     .data({
+                //         id:$('#id').val(),
+                //         endplace:$('#endplace').val(),
+                //         starttime : $('#starttime').val(),
+                //         carnum : $('#carnum').val(),
+                //         phonenum : $('#phonenum').val(),
+                //         poolcost : $('#poolcost').val()
+                //     })
+                //     .post('https://www.runoob.com/try/ajax/demo_axios_post.php')
+                //     .then(response => (this.info = response))
+                //     .catch(function (error) { // 请求失败处理
+                //         console.log(error);
+                //     });
+                // }
+            //})
         </script>
             <!-- <div class="app">
             <h1>Apache Cordova</h1>
