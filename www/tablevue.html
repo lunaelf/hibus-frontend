@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>管理员后台</title>
+	<link rel="stylesheet" href="./css/bootstrap3.min.css" type="text/css">  
+	<script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/axios.min.js"></script> 
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script>
+    
+</head>
+<body>
+    <nav class="navbar navbar-default navbar-static-top" role="navigation">
+        <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">巴士详情</a>
+        </div>
+    </nav>
+    
+
+<div id="app">
+{{info}}
+</div>
+<table class="table table-striped" >
+	<tbody>
+		<tr>
+			<th>车ID：</th>
+			<td>{{info}}</td>
+		</tr>
+		<tr>
+			<th>车主姓名：</th>
+			<td>张韬</td>
+        </tr>
+        <tr>
+			<th>性别：</th>
+			<td>男</td>
+		</tr>
+		<tr>
+			<th>手机号：</th>
+			<td>13181114103</td>
+        </tr>
+        <tr>
+			<th>目的地：</th>
+			<td>哈尔滨</td>
+        </tr>
+        <tr>
+			<th>车牌号：</th>
+			<td>10086</td>
+        </tr>
+        <tr>
+			<th>身份证号：</th>
+			<td>230304199907285236</td>
+		</tr>
+	</tbody>
+</table>
+
+
+<script>
+    new Vue({
+            el: '#app',
+            data() {
+                return {
+                    info: null
+                }
+            },
+            mounted() {
+                axios
+                    .get('./tableDemo.json')
+                    .then(response => (this.info = response))
+                    .catch(function (error) { // 请求失败处理
+                        console.log(error);
+                    });
+            }
+        })
+</script>
+</body>
+</html>
