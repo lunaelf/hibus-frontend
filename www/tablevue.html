@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>管理员后台</title>
+	<link rel="stylesheet" href="./css/bootstrap3.min.css" type="text/css">
+	<script src="./js/jquery.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+	<script src="./js/axios.min.js"></script>
+	<script src="./js/vue.js"></script>
+
+
+</head>
+
+<body>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">巴士详情</a>
+			</div>
+	</nav>
+	 <!-- 模态框（Modal） -->
+	 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" 
+                            aria-hidden="true">×
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">
+                      修改信息
+                    </h4>
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">ID</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="请输入车id">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastname" class="col-sm-2 control-label">车主</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="lastname" 
+                                       placeholder="请输入车主名字">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">性别</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="请输入性别">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">手机号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="请输入联系电话">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">目的地</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="请输入目的地">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">车牌号</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="请输入车牌号">
+                            </div>
+                        </div>
+                       
+                        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" 
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+	<div id="app">
+	
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<th>id：</th>
+				<td>{{info.id}}</td>
+			</tr>
+			<tr>
+				<th>线路id：</th>
+				<td>{{info.line_id}}</td>
+			</tr>
+			<tr>
+				<th>车辆编号：</th>
+				<td>{{info.bus_number}}</td>
+			</tr>
+			
+			<tr>
+				<th>票价：</th>
+				<td>{{info.ticket_price}}</td>
+			</tr>
+			<tr>
+				<th>门槛价：</th>
+				<td>{{info.threshold_price}}</td>
+			</tr>
+			<tr>
+				<th>当前乘客：</th>
+				<td>{{info.current_passenger}}</td>
+			</tr>
+			<tr>
+				<th>门槛乘客：</th>
+				<td>{{info.threshold_passenger}}</td>
+			</tr>
+			<tr>
+				<th>纬度：</th>
+				<td>{{info.latitude}}</td>
+			</tr>
+			<tr>
+				<th>经度：</th>
+				<td>{{info.longitude}}</td>
+			</tr>
+			<tr>
+				<th>站点：</th>
+				<td>{{info.location}}</td>
+			</tr>
+			<tr>
+				<th>目的地：</th>
+				<td>{{info.station}}</td>
+			</tr>
+			<tr>
+				<th>状态：</th>
+				<td>{{info.status}}</td>
+			</tr>
+
+		</tbody>
+	</table>
+</div>
+<div id="myButtons3" class="bs-example">
+    <button type="button" class="btn btn-info"  data-toggle="modal" data-target="#myModal" >编辑
+    </button>
+    <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#myModal1"  >删除
+    </button>
+</div>
+
+<!--删除模态框 -->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    删除提示
+                </h4>
+            </div>
+            <div class="modal-body">
+                此操作将无法恢复,确定删除？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                </button>
+                <button type="button" id="uid" class="btn btn-danger" value="" onclick="deletButton(this.value);jump" data-dismiss="modal" >
+                    确定删除
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" 
+						aria-hidden="true">×
+				</button>
+				
+				<form class="form-horizontal" role="form" id="sortForm">
+					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">车牌号</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="请输入车牌号" name="bus_number">
+						</div>
+					</div>
+					<!-- <div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">司机号码</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="司机手机号" name="phone">
+						</div>
+					</div> -->
+				   
+					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">最大乘车人数</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="请输载量" name="threshold_passenger">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">最低票价</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="请输载量" name="threshold_price">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">路线id</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="请输路线id" name="line_id">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">票价</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="请输载量" name="ticket_price">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">目的地</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="请输目的地" name="station">
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="firstname" class="col-sm-2 control-label">司机手机号</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" id="firstname" 
+								   placeholder="请输入司机联系方式" name="driver_phone">
+						</div>
+					</div>
+					
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" 
+						data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary" id="regect" data-dismiss="modal">
+					提交
+				</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+
+	<script>
+		// function GetRequest() {
+		//             var url = location.search; //获取url中"?"符后的字串  
+		//             var theRequest = new Object();
+		//             if (url.indexOf("?") != -1) {
+		//                 var str = url.substr(1);
+		//                 strs = str.split("&");
+		//                 for (var i = 0; i < strs.length; i++) {
+		//                     theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+		//                 }
+		// 			}
+		// 			newurl = 'http://localhost:8080/buses/'+theRequest.id
+		// 			return theRequest;
+
+		// 		}  
+		function getQueryVariable(variable) {
+			var query = window.location.search.substring(1);
+			var vars = query.split("&");
+			for (var i = 0; i < vars.length; i++) {
+				var pair = vars[i].split("=");
+				if (pair[0] == variable) { return pair[1]; }
+			}
+			return (false);
+		}
+		getid = getQueryVariable("id");
+		// alert(getQueryVariable("id"));
+		newurl = 'http://localhost:8080/buses/' +getid
+			new Vue({
+				el: '#app',
+				data() {
+					return {
+						info: null
+					}
+				},
+				mounted() {
+					axios
+						.get(newurl)
+						.then(response => (this.info = response.data))
+						.catch(function (error) { // 请求失败处理
+							console.log(error);
+						});
+				}
+			})
+
+
+			//删除模态框
+			$('#myModal').on('show.bs.modal', function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        var content = btnThis.closest('tr').find('td').eq(0).text();
+        $("#uid").attr("value",content);
+    });
+    //删除按钮
+    function deletButton(obj) {
+        console.log(obj);
+        $.ajax({
+			type: "DELETE", 
+            url : newurl,
+            async : false,
+            success : function(data) {
+                if (data.msg === 'ok'){
+                   alert(删除成功);
+                    location.reload();
+                } else {
+                    toastr.error('删除失败！');
+                }
+            }
+        });
+	}
+	
+	function jump(){
+		window.open("adminvue.html");
+	}
+
+			//修改模态框
+			// function query(getid) {
+			// 		alert('ajax请求之前');
+			// 		$.ajax({
+			// 			url: "/small/productServlet",
+			// 			async: true,
+			// 			type: "POST",
+			// 			data: {
+			// 				"type": "query",
+			// 				"id": id
+			// 			},
+			// 			// 成功后开启模态框
+			// 			success: showQuery,
+			// 			error: function () {
+			// 				alert("请求失败");
+			// 			},
+			// 			dataType: "json"
+			// 		});
+			// 	}
+
+			// 	// 查询成功后向模态框插入数据并开启模态框。data是返回的JSON对象
+			// 	function showQuery(data) {
+			// 		$("#name1").val(data.name);
+			// 		$("#xinghao1").val(data.xinghao);
+			// 		$("#address1").val(data.address);
+			// 		$("#department1").val(data.department);
+			// 		$("#unit1").val(data.unit);
+			// 		$("#number1").val(data.number);
+			// 		$("#price1").val(data.price);
+			// 		$("#totalprice1").val(data.totalprice);
+			// 		$("#come1").val(data.come);
+			// 		$("#buytime1").val(data.buytime);
+			// 		$("#useperson1").val(data.useperson);
+			// 		$("#handleperson1").val(data.handleperson);
+			// 		$("#admini1").val(data.admini);
+			// 		// 显示模态框
+			// 		$('#queryInfo').modal('show');
+			// 	}
+
+
+
+	</script>
+</body>
+
+</html>
