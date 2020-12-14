@@ -45,7 +45,7 @@
                             <label for="firstname" class="col-sm-2 control-label">最大乘车人数</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="firstname" 
-                                       placeholder="请输载量" name="threshold_passenger">
+                                       placeholder="请输入最大乘车人数" name="threshold_passenger">
                             </div>
                         </div>
                         <div class="form-group">
@@ -90,7 +90,7 @@
                     <button type="button" class="btn btn-default" 
                             data-dismiss="modal">关闭
                     </button>
-                    <button type="button" class="btn btn-primary" id="regect" data-dismiss="modal">
+                    <button type="button" class="btn btn-primary" id="regect"  data-dismiss="modal">
                         提交
                     </button>
                 </div>
@@ -117,15 +117,10 @@
     
             <!-- 循环输出数据 -->
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center  list-group-horizontal">
-                <a class="list-group-item active">车牌号</a>
-           
-                    <a  class="list-group-item" v-on:click="jumptod(site)"  v-for="site in info">
-                        {{site.bus_number}}
-    
-   
+                <a class="list-group-item active">车牌号</a>           
+                    <a  class="list-group-item" v-on:click="jumptod(site)"  v-for="site in filteredBuses">
+                        {{site.bus_number}}                      
                    </a>
-              
-                
             </div>
         </div>
         <!--分页-->
@@ -153,7 +148,7 @@
             },
             mounted() {
                 axios
-                    .get('http://localhost:8080/buses/')
+                    .get('http://127.0.0.1:8080/buses/')
                     .then(response => (this.info = response.data.results))
                     .catch(function (error) { // 请求失败处理
                         console.log(error);
@@ -167,24 +162,24 @@
 
             computed: {
             // 计算数学，匹配搜索
-            filteredArticles: function () {
-                var articles_array = this.info,
+            filteredBuses: function () {
+                var buses_array = this.info,
                     searchString = this.searchString;
     
                 if(!searchString){
-                    return articles_array;
+                    return buses_array;
                 }
     
                 searchString = searchString.trim().toLowerCase();
     
-                articles_array = articles_array.filter(function(item){
-                    if(item.title.toLowerCase().indexOf(searchString) !== -1){
-                        return item;
+                buses_array = buses_array.filter(function(info){
+                    if(info.bus_number.toLowerCase().indexOf(searchString) !== -1){
+                        return info;
                     }
                 })
     
                 // 返回过来后的数组
-                return articles_array;;
+                return buses_array;;
             }
         }
         })
@@ -240,16 +235,21 @@
             data:$('#sortForm').serialize(),// 序列化表单值  
             async: false,  
             error: function(request) {  //失败的话
-                 alert("Connection error");  
+                 alert("Connection error");
+                 console.log(data);  
             },  
             success: function(data) {  //成功
-                 alert(Success);  //就将返回的数据显示出来
+                console.log(data);
+                jump();
+                //alert(data);  //就将返回的数据显示出来
             }  
          });
        });  
-
-    
+       function jump(){
+		window.open("adminvue.html");
+	}
     </script>
+ 
 </body>
 </html>
 
