@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;"> -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *"> -->
+        <!--
+        Customize this policy to fit your own app's needs. For more guidance, see:
+            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+        Some notes:
+            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.jsdelivr.net https://webapi.amap.com data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; font-src 'self' https://fonts.gstatic.com; style-src-elem 'self' https://fonts.googleapis.com 'unsafe-inline';"> -->
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+        <meta name="color-scheme" content="light dark">
+        <link rel="stylesheet" href="css/home.css">
+        <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
+        <title>客运APP</title>
+        <!-- <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" /> -->
+        <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <!-- Vue.js 2.0 版本推荐使用 axios 来完成 ajax 请求。 -->
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <!-- 生产环境版本，优化了尺寸和速度 -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+        <!-- <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script> -->
+        <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        <div class="container fixed-top">
+            <div class="row">
+                <!--定制按钮-->
+                <div class="col-3">
+                    <button id='newBtn' class="btn btn-xs btn-primary fixed-top" style="margin-top: 90px;margin-left: 10px"  data-toggle="modal"  v-on:click="newAddOrder()">
+                        定制客车
+                    </button>
+                </div>
+                <!--免费距离-->
+                <div id="freedis" class="col-6" style="margin-top: 100px; text-align: center;">
+                </div>
+            </div>
+        </div>
+        <!--编辑订单弹窗#dee4e4-->
+        <div class="modal fade" id="addOrder" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form" >
+                            <div class="form-group">
+                                <label>目的地：</label>
+                                <input id="endplace" type="text" class="form-control"  placeholder="不能为空" required="required">
+                            </div>
+                            <div class="form-group">
+                                <label>出发时间：</label>
+                                <input id="starttime" type="datetime-local" class="form-control" required="required"/>
+                            </div>
+                            <div class="form-group" id="eIsd">
+                                <label>车牌号：</label>
+                                <input id="carnum" type="text" class="form-control" readOnly="true"  />
+                            </div>
+                            <div class="form-group">
+                                <label>车型：</label>
+                                <input id="threshold_passenger" type="text" class="form-control"  readOnly="true"  />
+                            </div>
+                            <div class="form-group">
+                                <label>手机号：</label>
+                                <input id="driver_phone" type="text" class="form-control"  readOnly="true"  />
+                            </div>
+                            <div class="form-group">
+                                <label>费用：</label>
+                                <input id="poolcost" type="text" class="form-control"  readOnly="true"  />
+                                <!--主键-->
+                                <input id="id" type="hidden" readOnly="true"/>
+                                <input id="bus_id" type="hidden" readOnly="true"/>
+                                <input id="passenger" type="hidden" readOnly="true"/>
+                                <input id="base_order_number" type="hidden" readOnly="true"/>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#yesorno">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade " id="yesorno" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog" style="position:absolute;bottom:0;right: 0;left: 0">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body text-center">确定要提交订单吗？</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveOrder()">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--搜索框-->
+        <div class="container  fixed-top heart">
+            <div class="row">
+                <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 10px">
+                    <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <input id="searchendplace" class="form-control" placeholder="输入目的地">
+                    </div>
+                    <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <button class="btn btn-light btn-block" type="button" onclick="queryOrder()">查询</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--地图div-->
+        <div class="main" id="gdmap"></div>
+        <!--订单列表-->
+        <div id="orderList" class="container fixed-bottom " style="z-index: 9;bottom:63px;max-height:40%;overflow: scroll;">
+                <ol class="list-group">
+                    <li class="list-group-item" v-for="order in orderList">
+                        <div v-on:click="openAddOrder(order)">
+                            {{ order.bus_start_time }} &nbsp {{ order.station_end }} &nbsp {{ order.payment }}
+                            <span class="badge text-danger">拼</span>
+                        </div>
+                    </li>
+                </ol>
+        </div>
+        <!--底部导航栏-->
+        <nav class="navbar bg-light fixed-bottom " style="margin:0;">
+                <div class="container">
+                        <div class="col-4 text-center">
+                            <a href="#" style="color: black">定制</br>
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="col-4 text-center">
+                            <a href="myorder.html" style="color: black">订单</br>
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list-ul" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="col-4 text-center">
+                            <a href="personinf.html" style="color: black">我的</br>
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+                                    <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                    <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                                </svg>
+                            </a>
+                        </div>
+                </div>
+        </nav>
+        <!--订单列表js-->
+        <script>
+            //渲染订单列表数据
+            var orderlistVm = new Vue({
+                el: '#orderList',
+                data: {
+                    orderList:[] 
+                },
+                methods: {
+                    openAddOrder: function (event) {//点击每条数据打开模态框
+                        $('#endplace').css({"border":"1px solid darkgrey" });
+                        $('#starttime').css({"border":"1px solid darkgrey" });
+                        $('#id').val(event.id);
+                        $('#endplace').val(event.station_end);
+                        $('#endplace').attr('readOnly',true);
+                        $('#starttime').val(event.bus_start_time);
+                        $('#starttime').attr('readOnly',true);
+                        $('#carnum').val(event.bus_number);
+                        $('#driver_phone').val(event.driver_phone);
+                        $('#threshold_passenger').val(event.threshold_passenger);
+                        $('#poolcost').val(event.payment/(event.passenger+1));
+                        $('#bus_id').val(event.bus_id);
+                        $('#passenger').val(event.passenger+1);
+                        //$('#base_order_number').val(event.order_number);
+                        $('#addOrder').modal();//打开模态框
+                    }
+
+                }
+            })
+            function queryOrder(){
+                var orderlist;
+                var param = new URLSearchParams();
+                var _this = orderlistVm;
+                param.append('searchendplace', $('#searchendplace').val());
+                param.append('order_type','0');
+                Object.assign(_this.$data, {orderList :[]});
+                axios
+                .post('http://localhost:8080/queryorder/',param)
+                .then(function (response) {//请求成功
+                    orderlist=response.data;
+                    for(i=0;i<orderlist.length;i++){
+                        var date = (orderlist[i].bus_start_time).replace("Z","");
+                        orderlist[i].bus_start_time = date;
+                        _this.$set(_this.orderList, i ,orderlist[i]);
+                    }
+                    // if(0>=orderlist.length){
+                    //     _this.$set(_this.orderList, i ,orderlist[i]);
+                    // }
+                    //v.$forceUpdate();
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error);
+                });
+            }
+        </script>
+        <!--定制客车按钮js-->
+        <script>
+            new Vue({
+                el: '#newBtn',
+                methods: {
+                    newAddOrder: function () {//清除模态框数据
+                        axios
+                            .post('http://localhost:8080/querybus/')
+                            .then(function (response) {//请求成功
+                                $('#endplace').css({"border":"1px solid darkgrey" });
+                                $('#starttime').css({"border":"1px solid darkgrey" });
+                                $('#carnum').val(response.data.bus_number);
+                                $('#threshold_passenger').val(response.data.threshold_passenger);
+                                $('#poolcost').val(response.data.ticket_price);
+                                $('#bus_id').val(response.data.id);
+                                $('#driver_phone').val(response.data.driver_phone);
+                                $('#id').val('-999');
+                                $('#endplace').val('');
+                                $('#endplace').attr('readOnly',false);
+                                $('#starttime').val('');
+                                $('#starttime').attr('readOnly',false);
+                                $('#addOrder').modal();
+                            })
+                            .catch(function (error) { // 请求失败处理
+                                console.log(error);
+                                alert("暂无空闲客车");
+                            });
+                    }
+                }
+            })
+        </script>
+        <!--提交,订单-->
+        <script type="text/javascript">
+            var user_id=1;
+            function saveOrder(){
+                var ep = $.trim($('#endplace').val());
+                var st = $.trim($('#starttime').val());
+                if(ep==null||ep==''||ep==undefined){
+                    $('#endplace').css({"border":"1px solid #ff0000" });
+                }else if(st==null||st==''||st==undefined){
+                    $('#starttime').css({"border":"1px solid #ff0000" });
+                }else{
+                    let param = new URLSearchParams();
+                    param.append('id', $('#id').val());
+                    param.append('station_end', $('#endplace').val());
+                    param.append('bus_start_time', $('#starttime').val());
+                    //param.append('carnum', $('#carnum').val());
+                    //param.append('phonenum', $('#phonenum').val());
+                    param.append('payment', $('#poolcost').val());
+                    param.append('bus_id', $('#bus_id').val());
+                    param.append('passenger', $('#passenger').val());
+                    param.append('base_order_number',$('#base_order_number').val());
+                    param.append('user_id', user_id);
+                    axios
+                        .post('http://localhost:8080/saveorder/',param)
+                        .then(function (response) {//请求成功
+                            alert("成功");
+                            $('#addOrder').modal('hide');
+                        })
+                        .catch(function (error) { // 请求失败处理
+                            console.log(error);
+                            alert("失败");
+                        });
+                }
+            }
+            //new Vue({
+                //el: '#addOrder'
+                // mounted () {
+                //     axios
+                //     .data({
+                //         id:$('#id').val(),
+                //         endplace:$('#endplace').val(),
+                //         starttime : $('#starttime').val(),
+                //         carnum : $('#carnum').val(),
+                //         phonenum : $('#phonenum').val(),
+                //         poolcost : $('#poolcost').val()
+                //     })
+                //     .post('https://www.runoob.com/try/ajax/demo_axios_post.php')
+                //     .then(response => (this.info = response))
+                //     .catch(function (error) { // 请求失败处理
+                //         console.log(error);
+                //     });
+                // }
+            //})
+        </script>
+        
+        <!--地图js-->
+        <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=6688033f1632beb1979f2b96c5afd026"></script>
+        <script>
+            mapObj = new AMap.Map('gdmap');
+            mapObj.plugin('AMap.Geolocation', function () {
+                geolocation = new AMap.Geolocation({
+                    enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                    timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                    maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                    convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                    showButton: true,        //显示定位按钮，默认：true
+                    buttonPosition: 'RT',    //定位按钮停靠位置，默认：'LB'，左下角
+                    buttonOffset: new AMap.Pixel(10, 90),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                    showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+                    showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+                    panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+                    zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                });
+                mapObj.addControl(geolocation);
+                geolocation.getCurrentPosition();
+                AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+                // AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+                var circle = new AMap.Circle({
+                    center: new AMap.LngLat("126.578517", "45.702171"), // 圆心位置，客运站
+                    radius: 2000,  //半径
+                    strokeColor: "#F33",  //线颜色
+                    strokeOpacity: 1,  //线透明度
+                    strokeWeight: 3,  //线粗细度
+                    fillColor: "#39C5BB",  //填充颜色
+                    fillOpacity: 0.35 //填充透明度
+                });
+                // 将以上覆盖物添加到地图上
+                mapObj.add(circle);
+            });
+            function onComplete(obj){
+                var p1 = [126.578517, 45.702171];//哈西客运站
+                var p2 = [obj.position.lng, obj.position.lat];
+                // 返回 p1 到 p2 间的地面距离，单位：米
+                var dis = AMap.GeometryUtil.distance(p1, p2);
+                if(2000>=dis){
+                    $("#freedis").html("您在免费距离内");
+                }else{
+                    $("#freedis").html("您不在"+"<a style='color:#39C5BB' onclick='freepos()'>免费距离</a>"+"内</br>有"+(dis/1000).toFixed(1)+"公里");
+                }
+                // var res = '经纬度：' + obj.position +
+                //     '\n精度范围：' + obj.accuracy +
+                //     '米\n定位结果的来源：' + obj.location_type +
+                //     '\n状态信息：' + obj.info +
+                //     '\n地址：' + obj.formattedAddress +
+                //     '\n地址信息：' + JSON.stringify(obj.addressComponent, null, 4);
+                // console.log(res);
+            }
+            // function onError(obj) {
+            //     alert(obj.info + '--' + obj.message);
+            //     console.log(obj);
+            // }
+            function freepos(){
+                //设置中心点和缩放级别
+                mapObj.setZoomAndCenter(12, [126.578517, 45.702171]);
+                // 在新中心点添加 marker 
+                var marker = new AMap.Marker({
+                    map: mapObj,
+                    position: [126.578517, 45.702171]
+                });
+            }
+        </script>
+        <p style="background-color:darkgrey;"></p>
+            <!-- <div class="app">
+            <h1>Apache Cordova</h1>
+            <div id="deviceready" class="blink">
+                <p class="event listening">Connecting to Device</p>
+                <p class="event received">Device is Ready</p>
+            </div>
+        </div>
+        <script src="cordova.js"></script>
+        <script src="js/index.js"></script> -->
+    </body>
+</html>
