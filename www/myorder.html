@@ -130,7 +130,10 @@
         <!--搜索结果js-->
         <script>
             var orderlist;
-            var user_id = 1;//获取已登录的user_id
+            var user_id= window.sessionStorage.getItem("user_id");//获取已登录的user_id
+            if(user_id==null||user_id==''||user_id==undefined){
+                user_id = 1;
+            }
             let param = new URLSearchParams();//创建URLSearchParams实例
             param.append('user_id', user_id);
             param.append('searchendplace', $('#searchendplace').val());
