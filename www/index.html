@@ -1,286 +1,93 @@
-<!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+<head>
+  <meta charset="UTF-8">
+  <title>登录</title>
+  <link rel="stylesheet" type="text/css" href="css.css">
+  <link rel="shortcut icon" href="img/customlogo.png" />
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
 
-    http://www.apache.org/licenses/LICENSE-2.0
+<body>
+  <div id="app" class="main">
+    <div class="title">
+      <span>密码登录</span>
+    </div>
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src *; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: 'unsafe-inline'; connect-src * 'unsafe-inline'; frame-src *;"> -->
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src * gap://ready file:; style-src 'self' 'unsafe-inline' *; script-src 'self' 'unsafe-inline' 'unsafe-eval' *"> -->
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.jsdelivr.net https://webapi.amap.com data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; font-src 'self' https://fonts.gstatic.com; style-src-elem 'self' https://fonts.googleapis.com 'unsafe-inline';"> -->
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
-        <meta name="color-scheme" content="light dark">
-        <link rel="stylesheet" href="css/index.css">
-        <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
-        <title>客运APP</title>
-        <!-- <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css" /> -->
-        <!-- 开发环境版本，包含了有帮助的命令行警告 -->
-        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-        <!-- Vue.js 2.0 版本推荐使用 axios 来完成 ajax 请求。 -->
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <!-- 生产环境版本，优化了尺寸和速度 -->
-        <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
-        <!-- <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js"></script> -->
-        <!-- <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <div class="title-msg">
+      <span>请输入登录账户和密码</span>
+    </div>
 
-    </head>
-    <body>
-        <!--定制按钮-->
-        <button id='newBtn' class="btn btn-xs btn-primary fixed-top" style="margin-top: 90px;margin-left: 10px"  data-toggle="modal"  data-target="#addOrder" v-on:click="newAddOrder()">
-            定制客车
-        </button>
-        <!--编辑订单弹窗#dee4e4-->
-        <div class="modal fade" id="addOrder" tabindex="-1" role="dialog" aria-hidden="true" style="overflow: auto">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form" >
-                            <div class="form-group">
-                                <label>目的地：</label>
-                                <input id="endplace" type="text" class="form-control"  placeholder="不能为空" >
-                            </div>
-                            <div class="form-group">
-                                <label>出发时间：</label>
-                                <input id="starttime" type="datetime-local" class="form-control"  placeholder="不能为空" />
-                            </div>
-                            <div class="form-group" id="eIsd">
-                                <label>车牌号：</label>
-                                <input id="carnum" type="text" class="form-control" readOnly="true"  />
-                            </div>
-                            <div class="form-group">
-                                <label>司机手机号：</label>
-                                <input id="phonenum" type="text" class="form-control"  readOnly="true"  />
-                            </div>
-                            <div class="form-group">
-                                <label>费用：</label>
-                                <input id="poolcost" type="text" class="form-control"  readOnly="true"  />
-                                <!--主键-->
-                                <input id="id" type="hidden" readOnly="true"/>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#yesorno">确定</button>
-                    </div>
-                </div>
-            </div>
+    <!-- <form v-on:submit="login" class="login-form" action="/authentication/form" method="post" novalidate> -->
+    <form v-on:submit.prevent="login" class="login-form" method="post" novalidate>
+      <!--输入框-->
+      <div class="input-content">
+        <!--autoFocus-->
+        <div>
+          <input v-model="username" type="text" autocomplete="off" placeholder="用户名" name="username" id="userid"
+            required />
         </div>
-        <div class="modal fade " id="yesorno" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static">
-            <div class="modal-dialog" style="position:absolute;bottom:0;right: 0;left: 0">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-                    <div class="modal-body text-center">确定要提交订单吗？</div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveOrder()">确定</button>
-                    </div>
-                </div>
-            </div>
+        <div style="margin-top: 16px">
+          <input v-model="password" type="password" id="userpwd" autocomplete="off" placeholder="登录密码" name="password"
+            required maxlength="32" />
         </div>
-        <!--搜索框-->
-        <div class="container  fixed-top heart">
-            <div class="row">
-                <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 10px">
-                    <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <input id="searchendplace" class="form-control" placeholder="输入目的地">
-                    </div>
-                    <div class=" col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <button class="btn btn-light btn-block" type="button" onclick="queryOrder()">查询</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--地图div-->
-        <div class="main" id="gdmap"></div>
-        <!--订单列表-->
-        <div id="orderList" class="container fixed-bottom " style="z-index: 9;bottom:63px;max-height:40%;overflow: scroll;">
-                <ol class="list-group">
-                    <li class="list-group-item" v-for="order in orderList">
-                        <div v-on:click="openAddOrder(order)">
-                            {{ order.starttime }} &nbsp {{ order.endplace }} &nbsp {{ order.poolcost }}
-                            <span class="badge text-danger">拼</span>
-                        </div>
-                    </li>
-                </ol>
-        </div>
-        <!--底部导航栏-->
-        <nav class="navbar bg-light fixed-bottom " style="margin:0;">
-                <div class="container">
-                        <div class="col-4 text-center">
-                            <a href="#" style="color: black">定制</br>
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                                </svg>
-                            </a>
-                        </div>
-                        <div class="col-4 text-center">
-                            <a href="myorder.html" style="color: black">订单</br>
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list-ul" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                                </svg>
-                            </a>
-                        </div>
-                        <div class="col-4 text-center">
-                            <a href="info.html" style="color: black">我的</br>
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
-                                    <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                                    <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
-                                </svg>
-                            </a>
-                        </div>
-                </div>
-        </nav>
-        <!--地图js-->
-        <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.14&key=6688033f1632beb1979f2b96c5afd026"></script>
-        <script>
-            mapObj = new AMap.Map('gdmap');
-            mapObj.plugin('AMap.Geolocation', function () {
-                geolocation = new AMap.Geolocation({
-                    enableHighAccuracy: true,//是否使用高精度定位，默认:true
-                    timeout: 10000,          //超过10秒后停止定位，默认：无穷大
-                    maximumAge: 0,           //定位结果缓存0毫秒，默认：0
-                    convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-                    showButton: true,        //显示定位按钮，默认：true
-                    buttonPosition: 'RT',    //定位按钮停靠位置，默认：'LB'，左下角
-                    buttonOffset: new AMap.Pixel(10, 90),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-                    showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
-                    showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-                    panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
-                    zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
-                });
-                mapObj.addControl(geolocation);
-                geolocation.getCurrentPosition();
-                // AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
-                // AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
-            });
-            // function onComplete(obj){
-            //     var res = '经纬度：' + obj.position +
-            //         '\n精度范围：' + obj.accuracy +
-            //         '米\n定位结果的来源：' + obj.location_type +
-            //         '\n状态信息：' + obj.info +
-            //         '\n地址：' + obj.formattedAddress +
-            //         '\n地址信息：' + JSON.stringify(obj.addressComponent, null, 4);
-            //     console.log(res);
-            // }
-            // function onError(obj) {
-            //     alert(obj.info + '--' + obj.message);
-            //     console.log(obj);
-            // }
-        </script>
-        <!--订单列表js-->
-        <script>
-            //渲染订单列表数据
-            new Vue({
-                el: '#orderList',
-                data: {
-                    orderList: [
-                    { id: 0,starttime: '2020-12-02T21:02',endplace:'北京',poolcost:'100元', phonenum :'13333333333',carnum:'黑A1234' },
-                    { id: 1,starttime: '2021-01-02T08:00',endplace:'北京',poolcost:'200元', phonenum :'14444443333',carnum:'黑B1234'},
-                    { id: 2,starttime: '2022-01-02T08:00',endplace:'北京',poolcost:'300元', phonenum :'15455463333333',carnum:'黑C1234'}
-                    ]
-                },
-                methods: {
-                    openAddOrder: function (event) {//点击每条数据打开模态框
-                        $('#id').val(event.id);
-                        $('#endplace').val(event.endplace);
-                        $('#endplace').attr('readOnly',true);
-                        $('#starttime').val(event.starttime);
-                        $('#starttime').attr('readOnly',true);
-                        $('#carnum').val(event.carnum);
-                        $('#phonenum').val(event.phonenum);
-                        $('#poolcost').val(event.poolcost);
-                        $('#addOrder').modal();//打开模态框
-                    }
-                }
+      </div>
+
+      <!--登入按钮-->
+      <div style="text-align: center">
+        <button type="submit" class="enter-btn" onclick="return eg.regCheck();">登录</button>
+      </div>
+
+      <div class="foor">
+        <div class="right"><a href="re.html"><span>注册账户</span></a></div>
+      </div>
+    </form>
+
+  </div>
+  <script>
+    var eg = {};
+    eg.$ = function (id) {
+      return document.getElementById(id);
+    }
+    eg.regCheck = function () {
+      var uid = eg.$("userid");
+      var upwd = eg.$("userpwd");
+      if (uid.value == '') {
+        alert('账户不能为空')
+        return false;
+      }
+      if (upwd.value == '') {
+        alert('密码不能为空')
+        return false;
+      }
+    }
+
+    var url = 'http://localhost:8080/login/';
+    var vm = new Vue({
+      el: '#app',
+      data: function () {
+        return {
+          username: '',
+          password: ''
+        }
+      },
+      methods: {
+        login: function (event) {
+          // console.log(this.username);
+          // console.log(this.password);
+          axios.post(url, { username: this.username, password: this.password })
+            .then(function (response) {
+              // console.log(response);
+              window.localStorage.setItem("user_id", response.data.id);
+              window.sessionStorage.setItem("user_id", response.data.id);
+              // console.log(window.localStorage.getItem("user_id"));
+              // console.log(window.sessionStorage.getItem("user_id"));
+              location.href("home.html");
             })
-        </script>
-        <!--定制客车按钮js-->
-        <script>
-            new Vue({
-                el: '#newBtn',
-                methods: {
-                    newAddOrder: function () {//清除模态框数据
-                        //缺少向后台查询可用的车牌+手机号
-                        $('#id').val('-999');
-                        $('#endplace').val('');
-                        $('#endplace').attr('readOnly',false);
-                        $('#starttime').val('');
-                        $('#starttime').attr('readOnly',false);
-                        $('#carnum').val('');
-                        $('#phonenum').val('');
-                        $('#poolcost').val('');
-                    }
-                }
+            .catch(function (error) {
+              console.log(error);
             })
-        </script>
-        <!--提交订单-->
-        <script type="text/javascript">
-            function saveOrder(){
-            $('#addOrder').modal('hide');
-            }
-            //new Vue({
-                //el: '#addOrder'
-                // mounted () {
-                //     axios
-                //     .data({
-                //         id:$('#id').val(),
-                //         endplace:$('#endplace').val(),
-                //         starttime : $('#starttime').val(),
-                //         carnum : $('#carnum').val(),
-                //         phonenum : $('#phonenum').val(),
-                //         poolcost : $('#poolcost').val()
-                //     })
-                //     .post('https://www.runoob.com/try/ajax/demo_axios_post.php')
-                //     .then(response => (this.info = response))
-                //     .catch(function (error) { // 请求失败处理
-                //         console.log(error);
-                //     });
-                // }
-            //})
-        </script>
-            <!-- <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-        <script src="cordova.js"></script>
-        <script src="js/index.js"></script> -->
-    </body>
-</html>
+        }
+      }
+    });
+  </script>
+</body>
