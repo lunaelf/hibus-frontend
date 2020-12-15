@@ -33,13 +33,13 @@
                       修改信息
                     </h4>
 					<form class="form-horizontal" role="form" id="sortForm1">
-						<div class="form-group">
+						<!--<div class="form-group">
                             <label for="firstname" class="col-sm-2 control-label">id</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="firstname" 
                                        placeholder="号" name="phone">
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label for="firstname" class="col-sm-2 control-label">车牌号</label>
                             <div class="col-sm-10">
@@ -57,10 +57,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="firstname" class="col-sm-2 control-label">最低票价</label>
+                            <label for="firstname" class="col-sm-2 control-label">总票价</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="firstname" 
-                                       placeholder="请输载量" name="threshold_price">
+                                       placeholder="总票价" name="threshold_price">
                             </div>
                         </div>
                         <div class="form-group">
@@ -71,17 +71,17 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="firstname" class="col-sm-2 control-label">票价</label>
+                            <label for="firstname" class="col-sm-2 control-label" style = "display:none">当前单人票价</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="firstname" 
-                                       placeholder="请输载量" name="ticket_price">
+                                       placeholder="200" name="ticket_price" value = "200" readonly style = "display:none">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="firstname" class="col-sm-2 control-label">目的地</label>
+                            <label for="firstname" class="col-sm-2 control-label">站点</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="firstname" 
-                                       placeholder="请输目的地" name="station">
+                                       placeholder="请输目的站点" name="station">
                             </div>
                         </div>
                         <div class="form-group">
@@ -111,10 +111,10 @@
 	
 	<table class="table table-striped">
 		<tbody>
-			<tr>
+			<!--<tr>
 				<th>id：</th>
 				<td>{{info.id}}</td>
-			</tr>
+			</tr>-->
 			<tr>
 				<th>线路id：</th>
 				<td>{{info.line_id}}</td>
@@ -123,11 +123,11 @@
 				<th>车辆编号：</th>
 				<td>{{info.bus_number}}</td>
 			</tr>
-			
+			<!--
 			<tr>
 				<th>票价：</th>
 				<td>{{info.ticket_price}}</td>
-			</tr>
+			</tr>-->
 			<tr>
 				<th>门槛价：</th>
 				<td>{{info.threshold_price}}</td>
@@ -137,10 +137,10 @@
 				<td>{{info.current_passenger}}</td>
 			</tr>
 			<tr>
-				<th>门槛乘客：</th>
+				<th>限乘乘客：</th>
 				<td>{{info.threshold_passenger}}</td>
 			</tr>
-			<tr>
+			<!--<tr>
 				<th>纬度：</th>
 				<td>{{info.latitude}}</td>
 			</tr>
@@ -151,7 +151,7 @@
 			<tr>
 				<th>站点：</th>
 				<td>{{info.location}}</td>
-			</tr>
+			</tr>-->
 			<tr>
 				<th>目的地：</th>
 				<td>{{info.station}}</td>
@@ -417,7 +417,9 @@
          });
        });  
        function jump(){
-		window.open("adminvue.html");
+		window.location.replace("adminvue.html");
+		//location.reload();
+		//window.open("adminvue.html");
 	}
 
 	</script>

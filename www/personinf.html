@@ -101,7 +101,10 @@
         </nav>
         <script>
             var userinfo = {username:null,phonenum:null,role:null};
-            var user_id=1;//获取已登录的user_id
+            var user_id= window.sessionStorage.getItem("user_id");//获取已登录的user_id
+            if(user_id==null||user_id==''||user_id==undefined){
+                user_id = 1;
+            }
             let param = new URLSearchParams();//创建URLSearchParams实例
             param.append('user_id', user_id);//设置请求参数
             var url = 'http://localhost:8080/userinf/';//请求的url，在hibus/urls.py中配置

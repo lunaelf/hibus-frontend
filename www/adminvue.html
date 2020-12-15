@@ -49,10 +49,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="firstname" class="col-sm-2 control-label">最低票价</label>
+                            <label for="firstname" class="col-sm-2 control-label">总票价</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="firstname" 
-                                       placeholder="请输载量" name="threshold_price">
+                                       placeholder="请输总票价" name="threshold_price">
                             </div>
                         </div>
                         <div class="form-group">
@@ -63,10 +63,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="firstname" class="col-sm-2 control-label">票价</label>
+                            <label for="firstname" class="col-sm-2 control-label" style = "display:none">当前单人票价</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="firstname" 
-                                       placeholder="请输载量" name="ticket_price">
+                                       placeholder="200" name="ticket_price" value = "200" readonly style = "display:none">
                             </div>
                         </div>
                         <div class="form-group">
@@ -232,7 +232,23 @@
     $.ajax({  
             type: "POST",   //提交的方法
             url:"http://localhost:8080/buses/", //提交的地址  
-            data:$('#sortForm').serialize(),// 序列化表单值  
+            data:$('#sortForm').serialize(),// 序列化表单值 
+            /*{
+            "url": "http://127.0.0.1:8080/buses/35/",
+            "id": 35,
+            "line_id": "http://127.0.0.1:8080/lines/1/",
+            "bus_number": "455555648",
+            //"ticket_price": "2.00",
+            "threshold_price": "200.00",
+            "current_passenger": 0,
+            "threshold_passenger": 20,
+            //"latitude": null,
+            //"longitude": null,
+            //"location": "",
+            "station": "车站1",
+            "status": 0,
+            "driver_phone": 555
+        } ,*/
             async: false,  
             error: function(request) {  //失败的话
                  alert("Connection error");
@@ -246,7 +262,9 @@
          });
        });  
        function jump(){
-		window.open("adminvue.html");
+        window.location.replace("adminvue.html")
+        //location.reload();
+		//window.open("adminvue.html");
 	}
     </script>
  

@@ -269,7 +269,10 @@
         </script>
         <!--提交,订单-->
         <script type="text/javascript">
-            var user_id=1;
+            var user_id= window.sessionStorage.getItem("user_id");
+            if(user_id==null||user_id==''||user_id==undefined){
+                user_id = 1;
+            }
             function saveOrder(){
                 var ep = $.trim($('#endplace').val());
                 var st = $.trim($('#starttime').val());
