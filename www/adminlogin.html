@@ -10,7 +10,7 @@
 <body>
   <div id="app" class="main">
     <div class="title">
-      <span>密码登录</span>
+      <span>管理员密码登录</span>
     </div>
 
     <div class="title-msg">
@@ -38,8 +38,7 @@
       </div>
 
       <div class="foor">
-        <div class="right"><a href="re.html"><span>注册账户</span></a></div>
-        <div class="left"><a href="adminlogin.html"><span>管理员登录</span></a></div>
+        <!-- <div class="right"><a href="re.html"><span>注册账户</span></a></div> -->
       </div>
     </form>
 
@@ -75,14 +74,14 @@
         login: function (event) {
           // console.log(this.username);
           // console.log(this.password);
-          axios.post(url, { username: this.username, password: this.password })
+          axios.post(url, { username: this.username, password: this.password})
             .then(function (response) {
               // console.log(response);
               window.localStorage.setItem("user_id", response.data.id);
               window.sessionStorage.setItem("user_id", response.data.id);
               // console.log(window.localStorage.getItem("user_id"));
               // console.log(window.sessionStorage.getItem("user_id"));
-              location.href="home.html";
+              location.href="adminvue.html";
             })
             .catch(function (error) {
               console.log(error);
