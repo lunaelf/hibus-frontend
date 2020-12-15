@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>管理员</title>
+	<link rel="stylesheet" href="./css/bootstrap3.min.css">
+	<script src="./js/jquery.min.js"></script>
+	<script src="./js/bootstrap.min.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/axios.min.js"></script> 
+
+</head>
+<body>
+    <!-- 模态框（Modal） -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" 
+                            aria-hidden="true">×
+                    </button>
+                    
+                    <form class="form-horizontal" role="form" id="sortForm">
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">起点</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="请输入起点" name="station_start">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label">终点</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="请输入终点" name="station_end">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label" style = "display:none">预计时间（小时）</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="2" name="estimate_hour" value = "2" readonly style = "display:none">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="firstname" class="col-sm-2 control-label" style = "display:none">预计时间（分钟）</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="firstname" 
+                                       placeholder="30" name="estimate_minute" value = "30" readonly style = "display:none">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" 
+                            data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" class="btn btn-primary" id="regect"  data-dismiss="modal">
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	
+	<div class="container" id="app" v-cloak>
+        <div class="row" >
+
+            <nav class="navbar navbar-default" role="navigation">
+				<div class="container-fluid"> 
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">行驶路线</a>
+				</div>
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="按ID查询" v-model="searchString">
+					</div>
+				</form>
+				<button type="button" class="btn btn-success btn-lg btn-block"  data-toggle="modal" data-target="#myModal">新增路线信息</button>
+				</div>
+			</nav>
+    
+            <!-- 循环输出数据 -->
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 text-center  list-group-horizontal">
+                <a class="list-group-item active">id : 路线</a>           
+                    <a  class="list-group-item" v-on:click="jumptod(site)"  v-for="site in filteredBuses">
+                        {{site.id}}:  {{site.station_start}} -- {{site.station_end}}                     
+                   </a>
+            </div>
+        </div>
+        <!--分页-->
+        <ul class="pagination">
+			<li><a href="#">&laquo;</a></li>
+			<li class="active"><a href="#">1</a></li>
+			<li class="disabled"><a href="#">2</a></li>
+			<li><a href="#">3</a></li>
+			<li><a href="#">4</a></li>
+			<li><a href="#">5</a></li>
+			<li><a href="#">6</a></li>
+			<li><a href="#">7</a></li>
+			<li><a href="#">8</a></li>
+			<li><a href="#">&raquo;</a></li>
+		</ul>
+    </div>
+    <div id="myButtons3" class="bs-example">
+        <!--<button type="button" class="btn btn-info"  data-toggle="modal" data-target="#myModal" >编辑
+        </button>
+        <button type="button" class="btn btn-danger"  data-toggle="modal" data-target="#myModal1"  >删除
+        </button>-->
+        <center><button type="button" class="btn btn-default"  data-toggle="modal" onclick="jump1()" data-dismiss="modal"  >返回车辆管理
+        </button></center>
+    </div>
+    <!--底部导航栏--><!--
+    <nav type="text/css" class="navbar bg-light fixed-bottom " style="margin:0;">
+        <div type="text/css" class="container">
+                <div type="text/css" class="col-4 text-center">
+                    <a href="#" type="text/css" style="color: black">路线管理</br>
+                        <svg  type="text/css" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-star-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path type="text/css" d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <a href="myorder.html" style="color: black">车量管理</br>
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-list-ul" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                        </svg>
+                    </a>
+                </div>
+                <div class="col-4 text-center">
+                    <a href="info.html" style="color: black">我的</br>
+                        <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-person-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M13.468 12.37C12.758 11.226 11.195 10 8 10s-4.757 1.225-5.468 2.37A6.987 6.987 0 0 0 8 15a6.987 6.987 0 0 0 5.468-2.63z"/>
+                            <path fill-rule="evenodd" d="M8 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                            <path fill-rule="evenodd" d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z"/>
+                        </svg>
+                    </a>
+                </div>
+        </div>
+    </nav>-->
+    <script>
+    new Vue({
+            el: '#app',
+            data() {
+                return {
+                    searchString: "",
+                    info: null
+                }
+            },
+            mounted() {
+                axios
+                    .get('http://127.0.0.1:8080/lines/')
+                    .then(response => (this.info = response.data.results))
+                    .catch(function (error) { // 请求失败处理
+                        console.log(error);
+                    });
+            },
+            methods : {
+            jumptod : function(site){
+                window.location.href="adtabr.html?id="+site.id;
+            }
+            },
+
+            computed: {
+            // 计算数学，匹配搜索
+            filteredBuses: function () {
+                var buses_array = this.info,
+                    searchString = this.searchString;
+    
+                if(!searchString){
+                    return buses_array;
+                }
+    
+                searchString = searchString.trim().toLowerCase();
+    
+                buses_array = buses_array.filter(function(info){
+                    if(info.bus_number.toLowerCase().indexOf(searchString) !== -1){
+                        return info;
+                    }
+                })
+    
+                // 返回过来后的数组
+                return buses_array;;
+            }
+        }
+        })
+
+
+        //模态框提交2
+        $("#regect").click(function () {
+    $.ajax({  
+            type: "POST",   //提交的方法
+            url:"http://localhost:8080/lines/", //提交的地址  
+            data:$('#sortForm').serialize(),// 序列化表单值  
+            async: false,  
+            error: function(request) {  //失败的话
+                 alert("Connection error");
+                 console.log(data);  
+            },  
+            success: function(data) {  //成功
+                console.log(data);
+                jump();
+                //alert(data);  //就将返回的数据显示出来
+            }  
+         });
+       });  
+       function jump(){
+        window.location.replace("adroad.html")
+        //location.reload();
+		//window.open("adminvue.html");
+    }
+    function jump1(){
+        window.location.replace("tablevue.html")}
+    </script>
+ 
+</body>
+</html>
+
