@@ -2,9 +2,11 @@
     <meta charset="UTF-8">
     <title>注册</title>
     <link rel="stylesheet" type="text/css" href="css.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-<div class="main">
+<div id="app" class="main">
     <div class="title">
         <span>用户注册</span>
     </div>
@@ -13,16 +15,17 @@
         <span>请输入注册账户和密码</span>
     </div>
  
-    <form class="login-form" action="/authentication/form" method="post" novalidate >
+    <!-- <form class="login-form" action="/authentication/form" method="post" novalidate > -->
+    <form v-on:submit.prevent="register" class="login-form" method="post" novalidate >
         <!--输入框-->
         <div class="input-content">
             <!--autoFocus-->
             <div>
-                <input type="text" autocomplete="off"
+                <input v-model="username"  type="text" autocomplete="off"
                        placeholder="用户名" name="username" id="userid"required/>
             </div>
             <div style="margin-top: 16px">
-                <input type="password"id="userpwd"
+                <input v-model="password" type="password"id="userpwd"
                        autocomplete="off" placeholder="密码" name="password" required maxlength="32"/>
             </div>
         </div>
@@ -55,4 +58,33 @@
             return false;
         }
       }
+
+      var url = 'http://localhost:8080/register/';
+      var vm = new Vue({
+        el: '#app',
+        data: function () {
+          return {
+            username: '',
+            password: ''
+          }
+        },
+        methods: {
+          register: function (event) {
+            // console.log(this.username);
+            // console.log(this.password);
+            axios.post(url, { username: this.username, password: this.password })
+              .then(function (response) {
+                // console.log(response);
+                window.localStorage.setItem("user_id", response.data.id);
+                window.sessionStorage.setItem("user_id", response.data.id);
+                // console.log(window.localStorage.getItem("user_id"));
+                // console.log(window.sessionStorage.getItem("user_id"));
+                location.href="home.html";
+              })
+              .catch(function (error) {
+                console.log(error);
+              })
+          }
+        }
+      });
 </script>
