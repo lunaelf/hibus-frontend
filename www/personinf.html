@@ -33,7 +33,7 @@
                 <div style="border-radius: 10px;border:solid 3px;border-color: black; margin-bottom: 5px;margin-left: 20px;margin-right: 20px;">
                     <div class="row" style="margin-bottom: 30%;margin-top: 5%;">
                         <div class="col-4">
-                            <p>用户名：{{userinf.username}}</p>
+                            <p>用户名：{{userinf[0].username}}</p>
                         </div>
                         <!-- <div class="col-8">
                             <input type="text" readonly=true style="border:0px;">
@@ -49,7 +49,7 @@
                     </div> -->
                     <div class="row" style="margin-bottom: 30%;">
                         <div class="col-4">
-                            <p>手机号：{{userinf.email}}</p>
+                            <p>手机号：{{userinf[0].email}}</p>
                         </div>
                         <!-- <div class="col-8">
                             <input type="text" readonly=true style="border:0px;">
@@ -57,7 +57,7 @@
                     </div>
                     <div class="row" style="margin-bottom: 30%;">
                         <div class="col-4">
-                            <p>角色：{{userinf.is_admin}}</p>
+                            <p>角色：{{userinf[0].is_admin}}</p>
                         </div>
                         <!-- <div class="col-8">
                             <input type="text" readonly=true style="border:0px;">
@@ -100,7 +100,7 @@
             </div>
         </nav>
         <script>
-            var userinfo = {username:null,phonenum:null,role:null};
+            var userinf;
             var user_id= window.sessionStorage.getItem("user_id");//获取已登录的user_id
             if(user_id==null||user_id==''||user_id==undefined){
                 user_id = 1;
@@ -112,14 +112,16 @@
                 el: '#userInfo',
                 data() {
                     return {
-                        userinf: userinfo
+                        userinf: []
                     }
                 },
                 mounted () {
+                    var _this = this;
                     axios
                     .post(url,param)
                     .then(function (response) {//请求成功
-                        userinfo=response.data;
+                        userinf=response.data;
+                        _this.$set(_this.userinf, 0 ,userinf)
                     })
                     .catch(function (error) { // 请求失败处理
                         console.log(error);

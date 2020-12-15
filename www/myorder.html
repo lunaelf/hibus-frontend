@@ -160,6 +160,9 @@
                         for(i=0;i<orderlist.length;i++){
                             var date = (orderlist[i].bus_start_time).replace("Z","");
                             orderlist[i].bus_start_time = date;
+                            if(0==orderlist[i].order_type){
+                                orderlist[i].payment= (orderlist[i].payment/orderlist[i].passenger).toFixed(2) ;
+                            }
                             _this.$set(_this.orderList, i ,orderlist[i]);//刷新数据
                         }
                     })
@@ -209,6 +212,9 @@
                     for(i=0;i<orderlist.length;i++){
                         var date = (orderlist[i].bus_start_time).replace("Z","");
                         orderlist[i].bus_start_time = date;
+                        if(0==orderlist[i].order_type){
+                                orderlist[i].payment= (orderlist[i].payment/orderlist[i].passenger).toFixed(2) ;
+                        }
                         _this.$set(_this.orderList, i ,orderlist[i]);
                     }
                 })

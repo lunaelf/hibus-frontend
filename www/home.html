@@ -290,7 +290,7 @@
                     param.append('payment', $('#poolcost').val());
                     param.append('bus_id', $('#bus_id').val());
                     param.append('passenger', $('#passenger').val());
-                    param.append('base_order_number',$('#base_order_number').val());
+                    //param.append('base_order_number',$('#base_order_number').val());
                     param.append('user_id', user_id);
                     axios
                         .post('http://localhost:8080/saveorder/',param)
